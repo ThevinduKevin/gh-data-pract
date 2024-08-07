@@ -18,6 +18,8 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
+    outputs:
+      script-file: ${{steps.publish.outputs.script-file }}   # we get output of GITHUB_OUTPUT in here
     steps: 
       - name: Get code
         uses: actions/checkout@v3
@@ -25,6 +27,9 @@ jobs:
         run: npm ci
       - name: Build website
         run: npm run build 
+      - name: Publish JS filename
+        id: publish
+        run: find dist/assets/*.js -type f -execdir echo 'script-file={}' >> $GITHUB_OUTPUT ';'  #write output to a file which path is stored in special variable GITHUB_OUTPUT
       - name: Upload artifacts
         uses: actions/upload-artifacts@v3
         with:
