@@ -9,6 +9,11 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
+      - name: Cache dependencies  # cache dependencies for npm. it's different for the different type
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles{'**/package-lock.json'} }}  #cache name that would not fully static or hard coded
       - name: Install dependencies
         run: npm ci
       - name: Lint code
@@ -23,6 +28,11 @@ jobs:
     steps: 
       - name: Get code
         uses: actions/checkout@v3
+      - name: Cache dependencies  #copy and paste the cache we put above
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles{'**/package-lock.json'} }}    
       - name: Install dependencies
         run: npm ci
       - name: Build website
